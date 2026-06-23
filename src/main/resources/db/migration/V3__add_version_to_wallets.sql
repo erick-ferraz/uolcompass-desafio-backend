@@ -1,0 +1,2 @@
+ALTER TABLE tb_wallets
+    ADD COLUMN version BIGINT NOT NULL DEFAULT 0 AFTER type;
