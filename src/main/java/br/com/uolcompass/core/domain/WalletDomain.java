@@ -19,5 +19,6 @@ public class WalletDomain {
     private final String password;
     private final BigDecimal balance;
     private final WalletType type;
+    private final Long version;
 
 }

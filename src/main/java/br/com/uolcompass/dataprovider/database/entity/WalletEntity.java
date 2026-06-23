@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,4 +26,7 @@ public class WalletEntity extends BaseEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     private WalletType type;
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
 }
