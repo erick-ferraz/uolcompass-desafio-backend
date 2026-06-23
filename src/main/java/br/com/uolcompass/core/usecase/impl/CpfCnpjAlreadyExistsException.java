@@ -1,8 +1,11 @@
 package br.com.uolcompass.core.usecase.impl;
 
-public class CpfCnpjAlreadyExistsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class CpfCnpjAlreadyExistsException extends ApplicationBaseException {
 
     public CpfCnpjAlreadyExistsException(String cpfCnpj) {
-        super("CPF/CNPJ already registered: " + cpfCnpj);
+        super(HttpStatus.CONFLICT, "CPF/CNPJ already registered: " + cpfCnpj);
     }
+
 }
