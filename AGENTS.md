@@ -35,6 +35,7 @@ Located at `src/main/resources/application.properties`. Current datasource confi
 - Use Lombok (`@Getter`, `@Setter`, `@RequiredArgsConstructor`, etc.) — no manual getters/setters.
 - JPA entities go in `dataprovider.entity` with annotations (`@Entity`, `@Table`, `@Id`, etc.).
 - Use Jakarta Persistence (`jakarta.persistence.*`), not `javax.persistence`.
+- No comments in generated/implemented code unless strictly necessary (e.g., Javadoc on public APIs, complex algorithm explanation). Avoid inline noise comments.
 
 ## Commit Pattern
 
