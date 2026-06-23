@@ -6,6 +6,9 @@ import br.com.uolcompass.dataprovider.database.mapper.WalletEntityMapper;
 import br.com.uolcompass.dataprovider.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -24,5 +27,12 @@ public class WalletGatewayImpl implements WalletGateway {
     @Override
     public boolean existsByCpfCnpj(String cpfCnpj) {
         return walletRepository.existsByCpfCnpj(cpfCnpj);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<WalletDomain> findById(Long id) {
+        return walletRepository.findById(id)
+                .map(walletEntityMapper::toDomain);
     }
 }
