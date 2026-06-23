@@ -1,0 +1,11 @@
+CREATE TABLE tb_wallets (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    cpf_cnpj VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    balance DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    password VARCHAR(255) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+);
