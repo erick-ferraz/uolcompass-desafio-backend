@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Table(name = "tb_wallets")
 @Getter
 @Setter
-public class Wallet extends BaseEntity {
+public class WalletEntity extends BaseEntity {
 
     private String name;
     @Column(name = "cpf_cnpj")

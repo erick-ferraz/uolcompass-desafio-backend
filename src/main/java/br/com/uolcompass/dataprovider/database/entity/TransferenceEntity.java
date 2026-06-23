@@ -15,13 +15,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Transference extends BaseEntity {
+public class TransferenceEntity extends BaseEntity {
 
     private BigDecimal amount;
     @ManyToOne
     @JoinColumn(name = "payer_id")
-    private Wallet payer;
+    private WalletEntity payer;
     @ManyToOne
     @JoinColumn(name = "payee_id")
-    private Wallet payee;
+    private WalletEntity payee;
 }
