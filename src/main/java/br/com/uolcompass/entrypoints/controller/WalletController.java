@@ -1,9 +1,10 @@
 package br.com.uolcompass.entrypoints.controller;
 
-import br.com.uolcompass.entrypoints.dto.WalletCreationRequest;
-import br.com.uolcompass.entrypoints.dto.WalletResponse;
 import br.com.uolcompass.core.domain.WalletDomain;
 import br.com.uolcompass.core.usecase.CreateWalletUseCase;
+import br.com.uolcompass.entrypoints.dto.WalletCreationRequest;
+import br.com.uolcompass.entrypoints.dto.WalletResponse;
+import br.com.uolcompass.entrypoints.mapper.WalletDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-
 @Tag(name = "Wallets", description = "Endpoints for wallet management")
 @RestController
 @RequestMapping("/api/v1/wallets")
@@ -26,6 +25,7 @@ import java.math.BigDecimal;
 public class WalletController {
 
     private final CreateWalletUseCase createWalletUseCase;
+    private final WalletDtoMapper walletDtoMapper;
 
     @Operation(summary = "Create a new wallet")
     @ApiResponse(responseCode = "201", description = "Wallet created successfully")
@@ -33,7 +33,8 @@ public class WalletController {
     @ApiResponse(responseCode = "409", description = "CPF/CNPJ already registered", content = @Content)
     @PostMapping
     public ResponseEntity<WalletResponse> create(@Valid @RequestBody final WalletCreationRequest request) {
-        var response = createWalletUseCase.execute(request.toDomain());
-        return ResponseEntity.status(HttpStatus.CREATED).body(WalletResponse.from(response));
+        var domain = walletDtoMapper.toDomain(request);
+        var response = createWalletUseCase.execute(domain);
+        return ResponseEntity.status(HttpStatus.CREATED).body(walletDtoMapper.toResponse(response));
     }
 }

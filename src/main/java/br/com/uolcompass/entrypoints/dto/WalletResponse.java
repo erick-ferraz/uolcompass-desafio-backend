@@ -1,6 +1,5 @@
 package br.com.uolcompass.entrypoints.dto;
 
-import br.com.uolcompass.core.domain.WalletDomain;
 import br.com.uolcompass.core.enums.WalletType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -26,14 +25,4 @@ public record WalletResponse(
         @Schema(description = "Wallet type")
         WalletType type
 ) {
-    public static WalletResponse from(WalletDomain walletDomain) {
-        return new WalletResponse(
-                walletDomain.getId(),
-                walletDomain.getName(),
-                walletDomain.getCpfCnpj(),
-                walletDomain.getEmail(),
-                walletDomain.getBalance(),
-                walletDomain.getType()
-        );
-    }
 }
