@@ -30,37 +30,20 @@ API REST de um banco digital com suporte a carteiras **Individual** (CPF) e **Bu
 
 ## Setup Rápido
 
-```bash
-# 1. Clone o repositório
-git clone <repo-url>
-cd uolcompass-desafio-backend
 
-# 2. Suba a infraestrutura (MySQL, Redis, RabbitMQ)
-docker compose up -d
+`git clone <repo-url>`
 
-# 3. Execute a aplicação
-./mvnw clean spring-boot:run
-```
+`cd uolcompass-desafio-backend`
+
+**Usa Linux/macOS**? Rode o comando `./start.sh` para iniciar a aplicação.                   
+
+**Usa Windows?** Rode o comando `.\start.ps1` para iniciar a aplicação.
+
+O script copia automaticamente o `.env.example` → `.env` (se inexistente), sobe a infraestrutura com Docker Compose e inicia a aplicação Spring Boot.
 
 A aplicação estará disponível em `http://localhost:8080`.
 
 Swagger UI: `http://localhost:8080/swagger-ui.html`
-
-> **⚠️ Importante:** Antes de executar, crie o arquivo `.env` na raiz do projeto seguindo o modelo em `.env.example`. Exemplo de configuração:
->
-> ```env
-> MYSQL_USER=admin
-> MYSQL_PASSWORD=admin123
-> MYSQL_ROOT_PASSWORD=rootadmin123
->
-> RABBITMQ_HOST=localhost
-> RABBITMQ_PORT=5672
-> RABBITMQ_USERNAME=admin
-> RABBITMQ_PASSWORD=admin
->
-> REDIS_HOST=localhost
-> REDIS_PORT=6379
-> ```
 
 ---
 
