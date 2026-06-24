@@ -7,6 +7,7 @@ import br.com.uolcompass.entrypoints.dto.TransferenceResponse;
 import br.com.uolcompass.entrypoints.mapper.TransferenceDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ProblemDetail;
 
 @Tag(name = "Transferences", description = "Endpoints for transference management")
 @RestController
@@ -32,9 +34,12 @@ public class TransferenceController {
 
     @Operation(summary = "Initiate a new transference")
     @ApiResponse(responseCode = "202", description = "Transference initiated successfully")
-    @ApiResponse(responseCode = "400", description = "Invalid input or business rule violation (BUSINESS wallet, insufficient balance)", content = @Content)
-    @ApiResponse(responseCode = "404", description = "Wallet not found", content = @Content)
-    @ApiResponse(responseCode = "422", description = "Same wallet transfer", content = @Content)
+    @ApiResponse(responseCode = "400", description = "Invalid input or business rule violation",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponse(responseCode = "404", description = "Payer or payee wallet not found",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponse(responseCode = "422", description = "Cannot transfer to the same wallet",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     @PostMapping
     public ResponseEntity<TransferenceResponse> initiate(
             @Valid @RequestBody final TransferenceRequest request) {
@@ -46,7 +51,8 @@ public class TransferenceController {
 
     @Operation(summary = "Get transference status by ID")
     @ApiResponse(responseCode = "200", description = "Transference found")
-    @ApiResponse(responseCode = "404", description = "Transference not found", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Transference not found",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     @GetMapping("/{id}")
     public ResponseEntity<TransferenceResponse> getStatus(@PathVariable final Long id) {
         var result = getTransferenceStatusUseCase.execute(id);

@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 public interface WalletDtoMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "balance", expression = "java(java.math.BigDecimal.ZERO)")
     WalletDomain toDomain(WalletCreationRequest request);
 

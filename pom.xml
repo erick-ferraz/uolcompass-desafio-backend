@@ -30,7 +30,6 @@
 		<java.version>25</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<resilience4j.version>2.2.0</resilience4j.version>
-		<testcontainers.version>1.20.4</testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -82,6 +81,11 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
@@ -120,6 +124,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -129,23 +138,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>testcontainers</artifactId>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>mysql</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>rabbitmq</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
+			<groupId>org.instancio</groupId>
+			<artifactId>instancio-junit</artifactId>
+			<version>5.5.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -159,13 +159,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.testcontainers</groupId>
-				<artifactId>testcontainers-bom</artifactId>
-				<version>${testcontainers.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+	
 		</dependencies>
 	</dependencyManagement>
 
@@ -231,5 +225,52 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>load-env</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<goals>
+									<goal>read-project-properties</goal>
+								</goals>
+								<configuration>
+									<files>
+										<file>.env</file>
+									</files>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<environmentVariables>
+								<MYSQL_USER>${MYSQL_USER}</MYSQL_USER>
+								<MYSQL_PASSWORD>${MYSQL_PASSWORD}</MYSQL_PASSWORD>
+								<RABBITMQ_HOST>${RABBITMQ_HOST}</RABBITMQ_HOST>
+								<RABBITMQ_PORT>${RABBITMQ_PORT}</RABBITMQ_PORT>
+								<RABBITMQ_USERNAME>${RABBITMQ_USERNAME}</RABBITMQ_USERNAME>
+								<RABBITMQ_PASSWORD>${RABBITMQ_PASSWORD}</RABBITMQ_PASSWORD>
+								<REDIS_HOST>${REDIS_HOST}</REDIS_HOST>
+								<REDIS_PORT>${REDIS_PORT}</REDIS_PORT>
+							</environmentVariables>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

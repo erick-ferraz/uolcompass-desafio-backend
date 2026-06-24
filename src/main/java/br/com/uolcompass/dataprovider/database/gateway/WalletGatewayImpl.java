@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -45,4 +47,23 @@ public class WalletGatewayImpl implements WalletGateway {
             walletRepository.save(entity);
         });
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WalletDomain> findAllById(Collection<Long> ids) {
+        return walletRepository.findAllById(ids)
+                .stream()
+                .map(walletEntityMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WalletDomain> findAll() {
+        return walletRepository.findAll()
+                .stream()
+                .map(walletEntityMapper::toDomain)
+                .toList();
+    }
+
 }
