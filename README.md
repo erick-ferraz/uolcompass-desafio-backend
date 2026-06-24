@@ -46,6 +46,22 @@ A aplicação estará disponível em `http://localhost:8080`.
 
 Swagger UI: `http://localhost:8080/swagger-ui.html`
 
+> **⚠️ Importante:** Antes de executar, crie o arquivo `.env` na raiz do projeto seguindo o modelo em `.env.example`. Exemplo de configuração:
+>
+> ```env
+> MYSQL_USER=admin
+> MYSQL_PASSWORD=admin123
+> MYSQL_ROOT_PASSWORD=rootadmin123
+>
+> RABBITMQ_HOST=localhost
+> RABBITMQ_PORT=5672
+> RABBITMQ_USERNAME=admin
+> RABBITMQ_PASSWORD=admin
+>
+> REDIS_HOST=localhost
+> REDIS_PORT=6379
+> ```
+
 ---
 
 ## Serviços e URLs
