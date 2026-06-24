@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class NotificationConsumer {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 var redisKey = REDIS_KEY_PREFIX + transferenceId;
-                redisTemplate.opsForValue().set(redisKey, "sent", REDIS_TTL_HOURS, TimeUnit.HOURS);
+                redisTemplate.opsForValue().set(redisKey, "sent", Duration.ofHours(REDIS_TTL_HOURS));
 
                 log.info("notification_sent transferenceId={} payeeId={} amount={}",
                         transferenceId, event.payeeId(), event.amount());
