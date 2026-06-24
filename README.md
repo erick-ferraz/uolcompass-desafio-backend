@@ -35,9 +35,9 @@ API REST de um banco digital com suporte a carteiras **Individual** (CPF) e **Bu
 
 `cd uolcompass-desafio-backend`
 
-**Usa Linux/macOS**? Rode o comando `./start.sh` para iniciar a aplicação.                   
+**Usa Linux/macOS**? Rode o comando `./start.sh` para iniciar a aplicação.
 
-**Usa Windows?** Rode o comando `.\start.ps1` para iniciar a aplicação.
+**Usa Windows?** Rode o comando `.\start.bat` para iniciar a aplicação.
 
 O script copia automaticamente o `.env.example` → `.env` (se inexistente), sobe a infraestrutura com Docker Compose e inicia a aplicação Spring Boot.
 
