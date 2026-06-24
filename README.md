@@ -106,6 +106,20 @@ Swagger UI: `http://localhost:8080/swagger-ui.html`
 
 ---
 
+## Data Seeder
+
+Na inicialização, a aplicação popula automaticamente o banco com 5 carteiras pré-carregadas (ativado via `app.seeder.enabled=true`). Só executa se a tabela estiver vazia.
+
+| ID | Nome | CPF/CNPJ | Tipo | Saldo Inicial | Senha |
+|----|------|-----------|------|---------------|-------|
+| 1 | Diógenes | 11111111111 | INDIVIDUAL | R$ 5.000,00 | `123456` |
+| 2 | Babidi | 22222222222 | INDIVIDUAL | R$ 3.000,00 | `123456` |
+| 3 | Bilbow | 33333333333 | INDIVIDUAL | R$ 2.000,00 | `123456` |
+| 4 | Dell Corp | 11111111111111 | BUSINESS | R$ 50.000,00 | `123456` |
+| 5 | Echo Ltda | 22222222222222 | BUSINESS | R$ 30.000,00 | `123456` |
+
+---
+
 ## Execução de Testes
 
 ```bash
