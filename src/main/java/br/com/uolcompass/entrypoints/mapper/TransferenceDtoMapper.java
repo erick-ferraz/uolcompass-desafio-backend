@@ -1,7 +1,6 @@
 package br.com.uolcompass.entrypoints.mapper;
 
 import br.com.uolcompass.core.domain.TransferenceDomain;
-import br.com.uolcompass.core.enums.TransferenceStatus;
 import br.com.uolcompass.entrypoints.dto.TransferenceRequest;
 import br.com.uolcompass.entrypoints.dto.TransferenceResponse;
 import org.mapstruct.Mapper;

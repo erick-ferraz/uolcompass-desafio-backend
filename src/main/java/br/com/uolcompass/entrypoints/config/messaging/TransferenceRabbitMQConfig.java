@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Configuration
@@ -25,11 +24,11 @@ public class TransferenceRabbitMQConfig {
     public static final String QUEUE_COMPENSATED  = "transference.compensated";
 
     public enum TransferenceQueue {
-        INITIATED("transference.initiated"),
-        DEBITED("transference.debited"),
-        COMPLETED("transference.completed"),
-        FAILED("transference.failed"),
-        COMPENSATED("transference.compensated");
+        INITIATED(QUEUE_INITIATED),
+        DEBITED(QUEUE_DEBITED),
+        COMPLETED(QUEUE_COMPLETED),
+        FAILED(QUEUE_FAILED),
+        COMPENSATED(QUEUE_COMPENSATED);
 
         public final String queueName;
         public final String dlqName;
@@ -55,11 +54,11 @@ public class TransferenceRabbitMQConfig {
                             .withArgument("x-dead-letter-exchange", "")
                             .withArgument("x-dead-letter-routing-key", tq.dlqName)
                             .build();
-                    Queue dlq     = new Queue(tq.dlqName);
+                    Queue dlq = new Queue(tq.dlqName);
                     Binding binding = BindingBuilder.bind(queue).to(exchange).with(tq.queueName);
                     return Stream.of(queue, dlq, binding);
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         return new Declarables(declarables);
     }

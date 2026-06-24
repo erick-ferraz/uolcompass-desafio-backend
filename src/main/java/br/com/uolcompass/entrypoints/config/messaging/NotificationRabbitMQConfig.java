@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NotificationRabbitMQConfig {
 
-    public static final String SEND_QUEUE    = "notification.send";
+    public static final String SEND_QUEUE = "notification.send";
 
     @Bean
     public Queue notificationSendQueue() {

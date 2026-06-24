@@ -3,6 +3,7 @@ package br.com.uolcompass.dataprovider.messaging.rabbitmq.consumer;
 import br.com.uolcompass.core.enums.TransferenceStatus;
 import br.com.uolcompass.core.gateway.TransferenceGateway;
 import br.com.uolcompass.core.gateway.WalletGateway;
+import br.com.uolcompass.dataprovider.cache.IdempotencyService;
 import br.com.uolcompass.dataprovider.messaging.dto.TransferenceCompensatedEvent;
 import br.com.uolcompass.dataprovider.messaging.dto.TransferenceFailedEvent;
 import br.com.uolcompass.entrypoints.config.messaging.TransferenceRabbitMQConfig;
@@ -20,14 +21,23 @@ public class CompensationConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(CompensationConsumer.class);
 
+    private static final String STEP = "compensation";
+
     private final WalletGateway walletGateway;
     private final TransferenceGateway transferenceGateway;
     private final RabbitTemplate rabbitTemplate;
+    private final IdempotencyService idempotencyService;
 
     @RabbitListener(queues = TransferenceRabbitMQConfig.QUEUE_FAILED)
     @Transactional
     public void handleCompensation(TransferenceFailedEvent event) {
         var transferenceId = event.transferenceId();
+
+        if (idempotencyService.isProcessed(transferenceId, STEP)) {
+            log.info("saga_compensation_duplicate transferenceId={}", transferenceId);
+            return;
+        }
+
         log.info("saga_compensation_started transferenceId={} currentStatus={}",
                 transferenceId, event.currentStatus());
 
@@ -44,6 +54,8 @@ public class CompensationConsumer {
             }
 
             transferenceGateway.updateStatus(transferenceId, TransferenceStatus.COMPENSATED);
+
+            idempotencyService.markProcessed(transferenceId, STEP);
 
             var compensatedEvent = new TransferenceCompensatedEvent(
                     transferenceId, event.payerId(), event.payeeId(), event.amount()

@@ -3,6 +3,7 @@ package br.com.uolcompass.dataprovider.messaging.rabbitmq.consumer;
 import br.com.uolcompass.core.enums.TransferenceStatus;
 import br.com.uolcompass.core.gateway.TransferenceGateway;
 import br.com.uolcompass.core.gateway.WalletGateway;
+import br.com.uolcompass.dataprovider.cache.IdempotencyService;
 import br.com.uolcompass.dataprovider.messaging.dto.TransferenceCompletedEvent;
 import br.com.uolcompass.dataprovider.messaging.dto.TransferenceDebitedEvent;
 import br.com.uolcompass.dataprovider.messaging.dto.TransferenceFailedEvent;
@@ -21,14 +22,23 @@ public class TransferenceCreditConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(TransferenceCreditConsumer.class);
 
+    private static final String STEP = "credit";
+
     private final WalletGateway walletGateway;
     private final TransferenceGateway transferenceGateway;
     private final RabbitTemplate rabbitTemplate;
+    private final IdempotencyService idempotencyService;
 
     @RabbitListener(queues = TransferenceRabbitMQConfig.QUEUE_DEBITED)
     @Transactional
     public void handleCredit(TransferenceDebitedEvent event) {
         var transferenceId = event.transferenceId();
+
+        if (idempotencyService.isProcessed(transferenceId, STEP)) {
+            log.info("saga_credit_duplicate transferenceId={}", transferenceId);
+            return;
+        }
+
         log.info("saga_credit_started transferenceId={}", transferenceId);
 
         try {
@@ -38,6 +48,8 @@ public class TransferenceCreditConsumer {
             var newBalance = payee.getBalance().add(event.amount());
             walletGateway.updateBalance(event.payeeId(), newBalance);
             transferenceGateway.updateStatus(transferenceId, TransferenceStatus.COMPLETED);
+
+            idempotencyService.markProcessed(transferenceId, STEP);
 
             var completedEvent = new TransferenceCompletedEvent(
                     transferenceId, event.payerId(), event.payeeId(), event.amount()

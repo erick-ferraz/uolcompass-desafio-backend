@@ -1,6 +1,5 @@
 package br.com.uolcompass.entrypoints.controller;
 
-import br.com.uolcompass.core.domain.WalletDomain;
 import br.com.uolcompass.core.usecase.CreateWalletUseCase;
 import br.com.uolcompass.entrypoints.dto.WalletCreationRequest;
 import br.com.uolcompass.entrypoints.dto.WalletResponse;
