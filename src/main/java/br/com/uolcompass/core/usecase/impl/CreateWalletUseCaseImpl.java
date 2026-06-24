@@ -4,6 +4,7 @@ import br.com.uolcompass.core.domain.WalletDomain;
 import br.com.uolcompass.core.gateway.WalletGateway;
 import br.com.uolcompass.core.usecase.CreateWalletUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,12 +12,26 @@ import org.springframework.stereotype.Service;
 public class CreateWalletUseCaseImpl implements CreateWalletUseCase {
 
     private final WalletGateway walletGateway;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public WalletDomain execute(WalletDomain walletDomain) {
         if (walletGateway.existsByCpfCnpj(walletDomain.getCpfCnpj())) {
             throw new CpfCnpjAlreadyExistsException(walletDomain.getCpfCnpj());
         }
-        return walletGateway.create(walletDomain);
+
+        var hashedPassword = passwordEncoder.encode(walletDomain.getPassword());
+        var walletToCreate = new WalletDomain(
+                null,
+                walletDomain.getName(),
+                walletDomain.getCpfCnpj(),
+                walletDomain.getEmail(),
+                hashedPassword,
+                walletDomain.getBalance(),
+                walletDomain.getType(),
+                null
+        );
+
+        return walletGateway.create(walletToCreate);
     }
 }

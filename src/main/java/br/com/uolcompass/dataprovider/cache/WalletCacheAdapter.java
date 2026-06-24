@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -72,6 +74,11 @@ public class WalletCacheAdapter implements WalletGateway {
         });
 
         return result;
+    }
+
+    @Override
+    public List<WalletDomain> findAllById(Collection<Long> ids) {
+        return delegate.findAllById(ids);
     }
 
     @Override

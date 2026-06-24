@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -40,6 +41,15 @@ public class TransferenceGatewayImpl implements TransferenceGateway {
             entity.setStatus(status);
             transferenceRepository.save(entity);
         });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TransferenceDomain> findByWalletIdOrderByCreatedAtDesc(Long walletId) {
+        return transferenceRepository.findByWalletIdOrderByCreatedAtDesc(walletId)
+                .stream()
+                .map(transferenceEntityMapper::toDomain)
+                .toList();
     }
 
 }
