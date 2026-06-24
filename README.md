@@ -120,6 +120,20 @@ Na inicialização, a aplicação popula automaticamente o banco com 5 carteiras
 
 ---
 
+## Gestão do Esquema (Flyway)
+
+O schema do banco é gerenciado por **Flyway migrations** (`src/main/resources/db/migration`). Por padrão, a propriedade `spring.jpa.hibernate.ddl-auto=create-drop` faz com que o Hibernate recrie todas as tabelas a cada inicialização, e em seguida o Flyway aplica as migrations. **Isso significa que todo restart da aplicação destrói os dados existentes.**
+
+Para manter os dados entre reinicializações (ambiente de desenvolvimento persistente), altere em `src/main/resources/application.properties`:
+
+```properties
+spring.jpa.hibernate.ddl-auto=none
+```
+
+Com `none`, o Hibernate não interfere no schema — apenas o Flyway gerencia as migrations incrementalmente.
+
+---
+
 ## Execução de Testes
 
 ```bash
