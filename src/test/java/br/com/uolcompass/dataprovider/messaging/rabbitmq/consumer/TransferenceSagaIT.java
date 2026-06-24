@@ -5,6 +5,7 @@ import br.com.uolcompass.core.enums.WalletType;
 import br.com.uolcompass.dataprovider.database.entity.WalletEntity;
 import br.com.uolcompass.dataprovider.database.entity.TransferenceEntity;
 import br.com.uolcompass.dataprovider.messaging.dto.TransferenceInitiatedEvent;
+import br.com.uolcompass.dataprovider.repository.OutboxEventRepository;
 import br.com.uolcompass.dataprovider.repository.TransferenceRepository;
 import br.com.uolcompass.dataprovider.repository.WalletRepository;
 import br.com.uolcompass.entrypoints.config.messaging.TransferenceRabbitMQConfig;
@@ -13,11 +14,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.Lifecycle;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -38,12 +43,31 @@ class TransferenceSagaIT {
     @Autowired
     private TransferenceRepository transferenceRepository;
 
+    @Autowired
+    private RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry;
+
+    @Autowired
+    private OutboxEventRepository outboxEventRepository;
+
     private Long payerId;
     private Long payeeId;
     private Long transferenceId;
 
     @BeforeEach
     void setUp() {
+        rabbitListenerEndpointRegistry.getListenerContainers()
+                .forEach(Lifecycle::stop);
+        Arrays.stream(TransferenceRabbitMQConfig.TransferenceQueue.values())
+                .forEach(tq -> rabbitTemplate.execute(channel -> {
+                    channel.queuePurge(tq.queueName);
+                    return null;
+                }));
+        rabbitListenerEndpointRegistry.getListenerContainers()
+                .forEach(Lifecycle::start);
+        await().atMost(Duration.ofSeconds(10)).until(
+                () -> rabbitListenerEndpointRegistry.getListenerContainers().stream()
+                        .allMatch(Lifecycle::isRunning));
+        outboxEventRepository.deleteAll();
         transferenceRepository.deleteAll();
         walletRepository.deleteAll();
 
@@ -75,6 +99,7 @@ class TransferenceSagaIT {
 
     @AfterEach
     void tearDown() {
+        outboxEventRepository.deleteAll();
         transferenceRepository.deleteAll();
         walletRepository.deleteAll();
     }
