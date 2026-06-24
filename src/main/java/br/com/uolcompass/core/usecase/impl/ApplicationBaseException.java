@@ -1,7 +1,9 @@
 package br.com.uolcompass.core.usecase.impl;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public abstract class ApplicationBaseException extends RuntimeException {
 
     private final HttpStatus status;
@@ -9,10 +11,6 @@ public abstract class ApplicationBaseException extends RuntimeException {
     protected ApplicationBaseException(HttpStatus status, String message) {
         super(message);
         this.status = status;
-    }
-
-    public HttpStatus getStatus() {
-        return status;
     }
 
 }
