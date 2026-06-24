@@ -8,7 +8,11 @@ import br.com.uolcompass.entrypoints.dto.WalletResponse;
 import br.com.uolcompass.entrypoints.mapper.StatementDtoMapper;
 import br.com.uolcompass.entrypoints.mapper.WalletDtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ProblemDetail;
 
 @Tag(name = "Wallets", description = "Endpoints for wallet management")
 @RestController
@@ -36,8 +41,10 @@ public class WalletController {
 
     @Operation(summary = "Create a new wallet")
     @ApiResponse(responseCode = "201", description = "Wallet created successfully")
-    @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
-    @ApiResponse(responseCode = "409", description = "CPF/CNPJ already registered", content = @Content)
+    @ApiResponse(responseCode = "400", description = "Invalid input data",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponse(responseCode = "409", description = "CPF/CNPJ already registered",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
     @PostMapping
     public ResponseEntity<WalletResponse> create(@Valid @RequestBody final WalletCreationRequest request) {
         var domain = walletDtoMapper.toDomain(request);
@@ -47,8 +54,17 @@ public class WalletController {
 
     @Operation(summary = "Get wallet statement (password required)")
     @ApiResponse(responseCode = "200", description = "Statement retrieved successfully")
-    @ApiResponse(responseCode = "401", description = "Invalid password", content = @Content)
-    @ApiResponse(responseCode = "404", description = "Wallet not found", content = @Content)
+    @ApiResponse(responseCode = "401", description = "Invalid wallet password",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponse(responseCode = "404", description = "Wallet not found",
+                 content = @Content(schema = @Schema(implementation = ProblemDetail.class)))
+    @Parameters(
+        @Parameter(name = "X-Wallet-Password",
+                   description = "Wallet password for authentication",
+                   required = true,
+                   in = ParameterIn.HEADER,
+                   example = "securePass123")
+    )
     @GetMapping("/{id}/statement")
     public ResponseEntity<StatementResponse> getStatement(
             @PathVariable final Long id,

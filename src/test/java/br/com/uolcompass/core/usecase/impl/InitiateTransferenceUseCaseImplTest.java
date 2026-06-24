@@ -48,9 +48,9 @@ class InitiateTransferenceUseCaseImplTest {
     @BeforeEach
     void setUp() {
         payer = new WalletDomain(1L, "John", "123", "john@test.com",
-                "pass", BigDecimal.valueOf(500), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(500), WalletType.INDIVIDUAL, 0L, null);
         payee = new WalletDomain(2L, "Milton", "456", "milton@test.com",
-                "pass", BigDecimal.ZERO, WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.ZERO, WalletType.INDIVIDUAL, 0L, null);
         input = new TransferenceDomain(null, 1L, 2L, BigDecimal.valueOf(100), null);
     }
 
@@ -74,7 +74,7 @@ class InitiateTransferenceUseCaseImplTest {
     @Test
     void shouldThrowExceptionWhenPayerIsBusiness() {
         payer = new WalletDomain(1L, "Biz", "12", "biz@test.com",
-                "pass", BigDecimal.valueOf(500), WalletType.BUSINESS, 0L);
+                "pass", BigDecimal.valueOf(500), WalletType.BUSINESS, 0L, null);
         when(walletGateway.findById(1L)).thenReturn(Optional.of(payer));
         when(walletGateway.findById(2L)).thenReturn(Optional.of(payee));
 
@@ -88,7 +88,7 @@ class InitiateTransferenceUseCaseImplTest {
     @Test
     void shouldThrowExceptionWhenInsufficientBalance() {
         payer = new WalletDomain(1L, "John", "123", "john@test.com",
-                "pass", BigDecimal.valueOf(50), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(50), WalletType.INDIVIDUAL, 0L, null);
         when(walletGateway.findById(1L)).thenReturn(Optional.of(payer));
         when(walletGateway.findById(2L)).thenReturn(Optional.of(payee));
 

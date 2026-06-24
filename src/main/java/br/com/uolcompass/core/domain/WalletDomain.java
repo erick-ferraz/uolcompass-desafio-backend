@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -20,5 +21,6 @@ public class WalletDomain {
     private final BigDecimal balance;
     private final WalletType type;
     private final Long version;
+    private final LocalDateTime createdAt;
 
 }

@@ -43,7 +43,7 @@ class GetWalletStatementUseCaseImplTest {
     void setUp() {
         wallet = new WalletDomain(1L, "John", "123", "john@test.com",
                 "$2a$10$hashedPass", BigDecimal.valueOf(500),
-                WalletType.INDIVIDUAL, 0L);
+                WalletType.INDIVIDUAL, 0L, null);
     }
 
     @Test

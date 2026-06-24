@@ -47,7 +47,7 @@ class CompensationConsumerTest {
     @BeforeEach
     void setUp() {
         payer = new WalletDomain(10L, "John", "123", "john@test.com",
-                "pass", BigDecimal.valueOf(300), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(300), WalletType.INDIVIDUAL, 0L, null);
     }
 
     @Test

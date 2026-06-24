@@ -33,7 +33,7 @@ class CreateWalletUseCaseImplTest {
 
     private final WalletDomain input = new WalletDomain(
             null, "John Doe", "12345678901", "john@example.com",
-            "rawPass123", BigDecimal.ZERO, WalletType.INDIVIDUAL, null
+            "rawPass123", BigDecimal.ZERO, WalletType.INDIVIDUAL, null, null
     );
 
     @Test

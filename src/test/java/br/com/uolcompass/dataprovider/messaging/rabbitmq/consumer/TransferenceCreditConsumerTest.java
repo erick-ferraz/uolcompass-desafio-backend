@@ -53,7 +53,7 @@ class TransferenceCreditConsumerTest {
     void setUp() {
         event = new TransferenceDebitedEvent(1L, 10L, 20L, BigDecimal.valueOf(100));
         payee = new WalletDomain(20L, "Milton", "456", "miltom@test.com",
-                "pass", BigDecimal.valueOf(200), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(200), WalletType.INDIVIDUAL, 0L, null);
     }
 
     @Test

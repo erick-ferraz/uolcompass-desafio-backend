@@ -4,6 +4,7 @@ import br.com.uolcompass.core.domain.WalletDomain;
 import br.com.uolcompass.core.gateway.WalletGateway;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +30,16 @@ public class WalletCacheAdapter implements WalletGateway {
     private static final long WALLET_TTL_SECONDS   = 300;
     private static final long BALANCE_TTL_SECONDS  = 30;
 
+    private static final ObjectMapper OBJECT_MAPPER = createObjectMapper();
+
     private final WalletGateway delegate;
     private final StringRedisTemplate redisTemplate;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static ObjectMapper createObjectMapper() {
+        var mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
 
     @Override
     public WalletDomain create(WalletDomain walletDomain) {
@@ -51,7 +59,7 @@ public class WalletCacheAdapter implements WalletGateway {
         if (cached != null) {
             log.debug("cache_hit_wallet walletId={}", id);
             try {
-                return Optional.of(objectMapper.readValue(cached, WalletDomain.class));
+                return Optional.of(OBJECT_MAPPER.readValue(cached, WalletDomain.class));
             } catch (JsonProcessingException ex) {
                 log.warn("cache_deserialize_error walletId={}", id, ex);
                 redisTemplate.delete(cacheKey);
@@ -65,7 +73,7 @@ public class WalletCacheAdapter implements WalletGateway {
             try {
                 redisTemplate.opsForValue().set(
                         cacheKey,
-                        objectMapper.writeValueAsString(wallet),
+                        OBJECT_MAPPER.writeValueAsString(wallet),
                         Duration.ofSeconds(WALLET_TTL_SECONDS)
                 );
             } catch (JsonProcessingException ex) {

@@ -46,7 +46,7 @@ class WalletCacheAdapterTest {
     @BeforeEach
     void setUp() throws Exception {
         wallet = new WalletDomain(1L, "John", "123", "john@test.com",
-                "pass", BigDecimal.valueOf(500), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(500), WalletType.INDIVIDUAL, 0L, null);
         when(redisTemplate.opsForValue()).thenReturn(valueOps);
     }
 

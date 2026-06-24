@@ -25,7 +25,7 @@ public record WalletCreationRequest(
         String password,
 
         @NotNull
-        @Schema(description = "Wallet type", example = "USER")
+        @Schema(description = "Wallet type", example = "INDIVIDUAL")
         WalletType type
 ) {
 }

@@ -8,13 +8,13 @@ import java.util.List;
 @Schema(description = "Wallet statement with transaction history")
 public record StatementResponse(
 
-        @Schema(description = "Wallet unique identifier")
+        @Schema(description = "Wallet unique identifier", example = "1")
         Long walletId,
 
-        @Schema(description = "Wallet owner name")
+        @Schema(description = "Wallet owner name", example = "John Doe")
         String walletName,
 
-        @Schema(description = "Current balance")
+        @Schema(description = "Current balance", example = "2500.00")
         BigDecimal balance,
 
         @Schema(description = "List of transactions (most recent first)")

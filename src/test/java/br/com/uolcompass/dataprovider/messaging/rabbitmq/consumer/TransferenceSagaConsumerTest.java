@@ -53,7 +53,7 @@ class TransferenceSagaConsumerTest {
     void setUp() {
         event = new TransferenceInitiatedEvent(1L, 10L, 20L, BigDecimal.valueOf(100));
         payer = new WalletDomain(10L, "John", "123", "john@test.com",
-                "pass", BigDecimal.valueOf(500), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(500), WalletType.INDIVIDUAL, 0L, null);
     }
 
     @Test
@@ -101,7 +101,7 @@ class TransferenceSagaConsumerTest {
     @Test
     void shouldThrowExceptionWhenInsufficientBalance() {
         payer = new WalletDomain(10L, "John", "123", "john@test.com",
-                "pass", BigDecimal.valueOf(50), WalletType.INDIVIDUAL, 0L);
+                "pass", BigDecimal.valueOf(50), WalletType.INDIVIDUAL, 0L, null);
         when(idempotencyService.isProcessed(1L, "debit")).thenReturn(false);
         when(walletGateway.findById(10L)).thenReturn(Optional.of(payer));
 

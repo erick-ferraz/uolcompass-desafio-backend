@@ -29,6 +29,7 @@ public class CreateWalletUseCaseImpl implements CreateWalletUseCase {
                 hashedPassword,
                 walletDomain.getBalance(),
                 walletDomain.getType(),
+                null,
                 null
         );
 
