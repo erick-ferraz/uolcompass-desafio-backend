@@ -18,6 +18,12 @@ public class TransferenceRabbitMQConfig {
 
     public static final String EXCHANGE = "transference.events";
 
+    public static final String QUEUE_INITIATED    = "transference.initiated";
+    public static final String QUEUE_DEBITED      = "transference.debited";
+    public static final String QUEUE_COMPLETED    = "transference.completed";
+    public static final String QUEUE_FAILED       = "transference.failed";
+    public static final String QUEUE_COMPENSATED  = "transference.compensated";
+
     public enum TransferenceQueue {
         INITIATED("transference.initiated"),
         DEBITED("transference.debited"),

@@ -5,19 +5,14 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class NotificationRabbitMQConfig {
 
-    public static final String EXCHANGE      = "notification.events";
     public static final String SEND_QUEUE    = "notification.send";
-
-    @Bean
-    public TopicExchange notificationExchange() {
-        return new TopicExchange(EXCHANGE);
-    }
 
     @Bean
     public Queue notificationSendQueue() {
@@ -33,8 +28,9 @@ public class NotificationRabbitMQConfig {
     }
 
     @Bean
-    public Binding bindNotificationSend() {
+    public Binding bindNotificationSend(@Qualifier("transferenceExchange") TopicExchange transferenceExchange) {
         return BindingBuilder.bind(notificationSendQueue())
-                .to(notificationExchange()).with(SEND_QUEUE);
+                .to(transferenceExchange)
+                .with(TransferenceRabbitMQConfig.QUEUE_COMPLETED);
     }
 }

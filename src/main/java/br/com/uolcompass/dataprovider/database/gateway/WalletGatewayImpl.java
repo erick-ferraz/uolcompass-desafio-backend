@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
@@ -34,5 +35,14 @@ public class WalletGatewayImpl implements WalletGateway {
     public Optional<WalletDomain> findById(Long id) {
         return walletRepository.findById(id)
                 .map(walletEntityMapper::toDomain);
+    }
+
+    @Override
+    @Transactional
+    public void updateBalance(Long walletId, BigDecimal newBalance) {
+        walletRepository.findById(walletId).ifPresent(entity -> {
+            entity.setBalance(newBalance);
+            walletRepository.save(entity);
+        });
     }
 }

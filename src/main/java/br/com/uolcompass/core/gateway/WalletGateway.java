@@ -2,6 +2,7 @@ package br.com.uolcompass.core.gateway;
 
 import br.com.uolcompass.core.domain.WalletDomain;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface WalletGateway {
@@ -11,5 +12,7 @@ public interface WalletGateway {
     boolean existsByCpfCnpj(String cpfCnpj);
 
     Optional<WalletDomain> findById(Long id);
+
+    void updateBalance(Long walletId, BigDecimal newBalance);
 
 }
