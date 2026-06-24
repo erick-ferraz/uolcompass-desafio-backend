@@ -19,4 +19,6 @@ public interface WalletGateway {
 
     List<WalletDomain> findAllById(Collection<Long> ids);
 
+    List<WalletDomain> findAll();
+
 }

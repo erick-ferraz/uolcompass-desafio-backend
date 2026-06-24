@@ -90,6 +90,11 @@ public class WalletCacheAdapter implements WalletGateway {
     }
 
     @Override
+    public List<WalletDomain> findAll() {
+        return delegate.findAll();
+    }
+
+    @Override
     public void updateBalance(Long walletId, BigDecimal newBalance) {
         invalidateCache(walletId);
         delegate.updateBalance(walletId, newBalance);

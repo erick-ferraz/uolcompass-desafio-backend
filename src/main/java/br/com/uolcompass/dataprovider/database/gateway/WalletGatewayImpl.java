@@ -57,4 +57,13 @@ public class WalletGatewayImpl implements WalletGateway {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<WalletDomain> findAll() {
+        return walletRepository.findAll()
+                .stream()
+                .map(walletEntityMapper::toDomain)
+                .toList();
+    }
+
 }
